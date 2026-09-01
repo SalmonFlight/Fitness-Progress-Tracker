@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Workout History - Fitness Tracker{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-xl font-bold text-[var(--text-primary)]">📊 Workout History</h1>
+            <p class="text-sm text-[var(--text-secondary)]">View all your completed workouts</p>
+        </div>
+        <span class="text-sm bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full">
+            {{ page_obj.paginator.count }} workout{{ page_obj.paginator.count|pluralize }}
+        </span>
+    </div>
+
+    <!-- Workout List -->
+    {% if workouts %}
+        <div class="space-y-3">
+            {% for workout in workouts %}
+                <div class="card hover:border-indigo-500/30 transition">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <a href="{% url 'workout_detail' workout.pk %}" class="flex-1">
+                            <div>
+                                <h3 class="text-base font-semibold text-[var(--text-primary)]">{{ workout.name }}</h3>
+                                <p class="text-sm text-[var(--text-secondary)]">
+                                    {{ workout.date|date:"l, M d, Y" }} · {{ workout.duration }} mins
+                                </p>
+                                <p class="text-xs text-[var(--text-muted)] mt-1">
+                                    {{ workout.sets.count }} exercise{{ workout.sets.count|pluralize }}
+                                </p>
+                            </div>
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs text-[var(--text-muted)]">{{ workout.sets.count }} sets</span>
+                            <a href="{% url 'workout_delete' workout.pk %}" class="text-xs text-red-400 hover:text-red-300 transition">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card text-center py-12">
+            <div class="text-4xl mb-3">🏋️</div>
+            <h3 class="text-lg font-semibold text-[var(--text-primary)]">No workouts yet</h3>
+            <p class="text-sm text-[var(--text-secondary)]">Complete a workout to see it here.</p>
+            <a href="{% url 'workout_create' %}" class="inline-block mt-4 text-sm text-indigo-400 hover:text-indigo-300 transition">
+                Log your first workout →
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <div class="flex flex-wrap justify-center items-center gap-2 pt-2">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="px-3 py-1 bg-[var(--bg-input)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-sm rounded-lg transition">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-[var(--bg-input)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-sm rounded-lg transition">Prev</a>
+            {% endif %}
+
+            <span class="px-3 py-1 text-sm text-[var(--text-secondary)]">
+                Page {{ page_obj.number }} of {{ paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-[var(--bg-input)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-sm rounded-lg transition">Next</a>
+                <a href="?page={{ paginator.num_pages }}" class="px-3 py-1 bg-[var(--bg-input)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-sm rounded-lg transition">Last</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <div class="pt-2">
+        <a href="{% url 'home' %}" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

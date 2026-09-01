@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Select Exercises - Fitness Tracker{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <div>
+        <h1 class="text-xl font-bold text-[var(--text-primary)]">Select Exercises</h1>
+        <p class="text-sm text-[var(--text-secondary)]">Choose exercises for your workout</p>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="flex flex-col sm:flex-row gap-3">
+        <div class="flex-1">
+            <input type="text" id="searchInput" placeholder="🔍 Search exercises..."
+                   class="w-full px-4 py-2 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+        </div>
+        <div class="sm:w-48">
+            <select id="categoryFilter" class="w-full px-4 py-2 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+                <option value="all">All Categories</option>
+                {% for key, label in categories %}
+                    <option value="{{ key }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Exercise List -->
+    <form method="post" id="exerciseForm">
+        {% csrf_token %}
+        
+        <!-- ADD THIS: Hidden field to track if coming from draft -->
+        {% if draft_id %}
+            <input type="hidden" name="draft_id" value="{{ draft_id }}">
+        {% endif %}
+        
+        <div class="card">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm text-[var(--text-secondary)]">
+                    <span id="selectedCount">0</span> selected
+                </span>
+                <div class="flex gap-2">
+                    <button type="button" id="selectAllBtn" class="text-xs text-indigo-400 hover:text-indigo-300 transition">Select All</button>
+                    <span class="text-[var(--border)]">|</span>
+                    <button type="button" id="deselectAllBtn" class="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition">Deselect All</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2" id="exerciseList">
+                {% for exercise in exercises %}
+                    <label class="exercise-item flex items-center gap-3 p-3 rounded-lg border border-[var(--border)] hover:border-indigo-500/30 transition cursor-pointer {% if exercise.id in selected_exercises %}border-indigo-500/50 bg-indigo-500/5{% endif %}"
+                           data-category="{{ exercise.category }}"
+                           data-name="{{ exercise.name|lower }}">
+                        <input type="checkbox" name="exercises" value="{{ exercise.id }}"
+                               class="exercise-checkbox w-4 h-4 text-indigo-500 rounded border-[var(--border)] focus:ring-indigo-500/50"
+                               {% if exercise.id in selected_exercises %}checked{% endif %}>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-[var(--text-primary)]">{{ exercise.name }}</p>
+                            <p class="text-xs text-[var(--text-muted)]">{{ exercise.get_category_display }}</p>
+                        </div>
+                        <span class="text-xs text-[var(--text-muted)]">+</span>
+                    </label>
+                {% empty %}
+                    <div class="col-span-2 text-center py-8 text-[var(--text-muted)]">
+                        <p>No exercises found. Add some in the admin panel.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
+            <div>
+                {% if is_draft %}
+                    <a href="{% url 'draft_edit' draft_id %}" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition">
+                        ← Back to Draft
+                    </a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition">
+                        ← Cancel
+                    </a>
+                {% endif %}
+            </div>
+            <button type="submit" id="continueBtn"
+                    class="w-full sm:w-auto px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                Continue →
+            </button>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const exerciseItems = document.querySelectorAll('.exercise-item');
+    const checkboxes = document.querySelectorAll('.exercise-checkbox');
+    const selectedCount = document.getElementById('selectedCount');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const deselectAllBtn = document.getElementById('deselectAllBtn');
+    const continueBtn = document.getElementById('continueBtn');
+
+    function updateCount() {
+        const checked = document.querySelectorAll('.exercise-checkbox:checked').length;
+        selectedCount.textContent = checked;
+        continueBtn.disabled = checked === 0;
+    }
+
+    function filterExercises() {
+        const search = searchInput.value.toLowerCase();
+        const category = categoryFilter.value;
+
+        exerciseItems.forEach(item => {
+            const name = item.dataset.name;
+            const cat = item.dataset.category;
+            const matchSearch = name.includes(search);
+            const matchCategory = category === 'all' || cat === category;
+            item.style.display = matchSearch && matchCategory ? 'flex' : 'none';
+        });
+    }
+
+    selectAllBtn.addEventListener('click', () => {
+        document.querySelectorAll('.exercise-checkbox:not(:checked)').forEach(cb => cb.checked = true);
+        updateCount();
+    });
+
+    deselectAllBtn.addEventListener('click', () => {
+        document.querySelectorAll('.exercise-checkbox:checked').forEach(cb => cb.checked = false);
+        updateCount();
+    });
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+    searchInput.addEventListener('input', filterExercises);
+    categoryFilter.addEventListener('change', filterExercises);
+
+    exerciseItems.forEach(item => {
+        const checkbox = item.querySelector('.exercise-checkbox');
+        checkbox.addEventListener('change', () => {
+            item.classList.toggle('border-indigo-500/50');
+            item.classList.toggle('bg-indigo-500/5');
+        });
+    });
+
+    updateCount();
+</script>
+{% endblock %}

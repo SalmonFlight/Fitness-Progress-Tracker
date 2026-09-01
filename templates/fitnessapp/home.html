@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Fitness Tracker{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold text-[var(--text-primary)]">Dashboard</h1>
+            <p class="text-sm text-[var(--text-secondary)]">Welcome back, {{ user.username }}!</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-[var(--text-muted)]">{{ now|date:"M d, Y" }}</span>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="stat-card">
+            <p class="text-lg font-bold text-cyan-400">{{ monthly_workout_count }}</p>
+            <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider">Workouts</p>
+        </div>
+        <div class="stat-card">
+            <p class="text-lg font-bold text-purple-400">{{ monthly_hours }}m</p>
+            <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider">Minutes</p>
+        </div>
+        <div class="stat-card">
+            <p class="text-lg font-bold text-emerald-400">
+                {{ current_weight|default:"--" }} {{ profile.weight_unit|default:"kg" }}
+            </p>
+            <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider">Current Weight</p>
+        </div>
+        <div class="stat-card">
+            <p class="text-lg font-bold text-amber-400">
+                {{ goal_weight|default:"--" }} {{ profile.weight_unit|default:"kg" }}
+            </p>
+            <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider">Goal Weight</p>
+        </div>
+    </div>
+
+    <!-- Latest Workout + PRs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Latest Workout -->
+        <div class="card">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider">📋 Latest Workout</h3>
+                {% if latest_workout %}
+                    <a href="{% url 'workout_detail' latest_workout.pk %}" class="text-xs text-indigo-400 hover:text-indigo-300 transition">View →</a>
+                {% endif %}
+            </div>
+            {% if latest_workout %}
+                <div class="card-dark">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="text-sm font-bold text-[var(--text-primary)]">{{ latest_workout.name }}</h4>
+                            <p class="text-xs text-[var(--text-muted)]">{{ latest_workout.date|date:"M d, Y" }} · {{ latest_workout.duration }} mins</p>
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">Recent</span>
+                    </div>
+                    {% if latest_workout.sets.all %}
+                        <div class="mt-2 space-y-0.5">
+                            {% for set in latest_workout.sets.all|slice:":3" %}
+                                <div class="flex justify-between text-xs border-b border-[var(--border)] py-1">
+                                    <span class="text-[var(--text-secondary)]">{{ set.exercise.name }}</span>
+                                    <span class="text-[var(--text-muted)]">{{ set.set_count }}x{{ set.reps }} @ {{ set.weight }}kg</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="card-dark text-center py-6">
+                    <p class="text-sm text-[var(--text-muted)]">No workouts yet</p>
+                    <a href="{% url 'workout_create' %}" class="text-xs text-indigo-400 hover:text-indigo-300">Log your first workout →</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Personal Records -->
+        <div class="card">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider">🏆 Personal Records</h3>
+                <a href="{% url 'profile' %}" class="text-xs text-indigo-400 hover:text-indigo-300 transition">Manage ✏️</a>
+            </div>
+            {% if personal_records %}
+                <div class="grid grid-cols-2 gap-2">
+                    {% for pr in personal_records %}
+                        <div class="card-dark text-center">
+                            <p class="text-xs text-[var(--text-muted)]">{{ pr.exercise.name }}</p>
+                            <p class="text-sm font-bold text-emerald-400">{{ pr.weight }}kg</p>
+                            <p class="text-[10px] text-[var(--text-muted)]">{{ pr.reps }} reps · {{ pr.date|date:"M d" }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card-dark text-center py-6">
+                    <p class="text-sm text-[var(--text-muted)]">No PRs tracked yet</p>
+                    <p class="text-xs text-[var(--text-muted)] mt-1">Select exercises in profile to track</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

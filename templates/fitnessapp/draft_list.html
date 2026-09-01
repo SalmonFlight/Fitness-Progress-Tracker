@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Drafts - Fitness Tracker{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-xl font-bold text-[var(--text-primary)]">📝 Drafts</h1>
+            <p class="text-sm text-[var(--text-secondary)]">Workouts you haven't finished yet</p>
+        </div>
+        <span class="text-sm bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full">
+            {{ drafts|length }} draft{{ drafts|pluralize }}
+        </span>
+    </div>
+
+    <!-- Drafts List -->
+    {% if drafts %}
+        <div class="space-y-3">
+            {% for draft in drafts %}
+                <div class="card hover:border-indigo-500/30 transition">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-base font-semibold text-[var(--text-primary)]">{{ draft.name }}</h3>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                {{ draft.date|date:"M d, Y" }} · {{ draft.duration }} mins
+                            </p>
+                            <p class="text-xs text-[var(--text-muted)] mt-1">
+                                {{ draft.sets.count }} exercise{{ draft.sets.count|pluralize }}
+                                {% if draft.sets.count > 0 %}
+                                    · 
+                                    {% for set in draft.sets.all|slice:":3" %}
+                                        {{ set.exercise.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    {% if draft.sets.count > 3 %}+ {{ draft.sets.count|add:"-3" }} more{% endif %}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="{% url 'draft_edit' draft.pk %}" 
+                               class="px-4 py-2 text-sm text-indigo-400 hover:text-indigo-300 border border-indigo-400/20 rounded-lg hover:bg-indigo-500/10 transition">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'draft_delete' draft.pk %}" 
+                               class="px-4 py-2 text-sm text-red-400 hover:text-red-300 border border-red-400/20 rounded-lg hover:bg-red-500/10 transition">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card text-center py-12">
+            <div class="text-4xl mb-3">📭</div>
+            <h3 class="text-lg font-semibold text-[var(--text-primary)]">No drafts</h3>
+            <p class="text-sm text-[var(--text-secondary)]">You don't have any draft workouts.</p>
+            <a href="{% url 'workout_create' %}" class="inline-block mt-4 text-sm text-indigo-400 hover:text-indigo-300 transition">
+                Start a workout →
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <div class="pt-2">
+        <a href="{% url 'home' %}" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}  

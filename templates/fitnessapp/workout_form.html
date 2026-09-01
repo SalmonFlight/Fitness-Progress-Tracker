@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Log Workout - Fitness Tracker{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-lg">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+        <div>
+            <h1 class="text-xl font-bold text-[var(--text-primary)]">Log Workout</h1>
+            <p class="text-sm text-[var(--text-secondary)]">Fill in the details for your workout</p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        <!-- Workout Details -->
+        <div class="card">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-sm">📋</span>
+                <h3 class="text-sm font-semibold text-[var(--text-primary)] uppercase tracking-wider">Workout Details</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="id_name" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Workout Name <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" name="name" id="id_name" value="{{ saved.name|default:'' }}"
+                           class="w-full px-5 py-4 text-base bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                           placeholder="e.g. Push Day, Upper Body, etc." required>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_date" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                            Date & Time <span class="text-red-400">*</span>
+                        </label>
+                        <input type="datetime-local" name="date" id="id_date" value="{% now 'Y-m-d\TH:i' %}"
+                               class="w-full px-5 py-4 text-base bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                               required>
+                    </div>
+                    <div>
+                        <label for="id_duration" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                            Duration (minutes) <span class="text-red-400">*</span>
+                        </label>
+                        <input type="number" name="duration" id="id_duration" value="{{ saved.duration|default:'' }}" min="1"
+                               class="w-full px-5 py-4 text-base bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                               placeholder="e.g. 45" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="id_notes" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Notes <span class="text-[var(--text-muted)] text-xs font-normal">(optional)</span>
+                    </label>
+                    <textarea name="notes" id="id_notes" rows="3"
+                              class="w-full px-5 py-4 text-base bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition resize-none"
+                              placeholder="Any notes about this workout...">{{ saved.notes|default:'' }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selected Exercises -->
+        <div class="card">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm">🏋️</span>
+                    <h3 class="text-sm font-semibold text-[var(--text-primary)] uppercase tracking-wider">Exercises</h3>
+                    <span class="text-xs text-[var(--text-muted)] bg-[var(--bg-input)] px-2 py-0.5 rounded-full">
+                        {{ selected_exercises|length }}
+                    </span>
+                </div>
+                <button type="submit" name="add_exercises" class="text-xs text-indigo-400 hover:text-indigo-300 transition flex items-center gap-1">
+                    <i class="fas fa-plus-circle"></i> Add/Remove
+                </button>
+            </div>
+
+            {% if selected_exercises %}
+                <div class="space-y-3" id="exerciseForms">
+                    {% for exercise in selected_exercises %}
+                        <div class="exercise-entry bg-[var(--bg-input)] rounded-xl border border-[var(--border)] p-4 hover:border-indigo-500/20 transition">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <p class="text-sm font-semibold text-[var(--text-primary)]">{{ exercise.name }}</p>
+                                    <span class="text-xs text-[var(--text-muted)]">{{ exercise.get_category_display }}</span>
+                                </div>
+                                <span class="text-[10px] text-[var(--text-muted)] bg-[var(--bg-body)] px-2 py-0.5 rounded-full">#{{ forloop.counter }}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-[var(--text-secondary)] mb-1">Sets</label>
+                                    <div class="relative">
+                                        <input type="number" name="set_count[]" min="1" max="20"
+                                               value="{{ saved.set_count|slice:forloop.counter0|first|default:'' }}"
+                                               class="w-full pl-3 pr-8 py-3.5 text-base bg-[var(--bg-body)] border border-[var(--border)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                                               placeholder="e.g. 4" required>
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[var(--text-muted)]">×</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-[var(--text-secondary)] mb-1">Reps</label>
+                                    <input type="number" name="reps[]" min="1" max="50"
+                                           value="{{ saved.reps|slice:forloop.counter0|first|default:'' }}"
+                                           class="w-full px-3 py-3.5 text-base bg-[var(--bg-body)] border border-[var(--border)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                                           placeholder="e.g. 8" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-[var(--text-secondary)] mb-1">Weight (kg)</label>
+                                    <input type="number" name="weight[]" min="0" step="0.5"
+                                           value="{{ saved.weight|slice:forloop.counter0|first|default:'' }}"
+                                           class="w-full px-3 py-3.5 text-base bg-[var(--bg-body)] border border-[var(--border)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                                           placeholder="e.g. 80" required>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-10 border-2 border-dashed border-[var(--border)] rounded-xl">
+                    <div class="text-3xl mb-2">🏋️</div>
+                    <p class="text-sm text-[var(--text-muted)]">No exercises selected</p>
+                    <button type="submit" name="add_exercises" class="inline-block mt-2 text-sm text-indigo-400 hover:text-indigo-300 transition font-medium">
+                        Select exercises →
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <a href="{% url 'home' %}" class="w-full sm:w-auto px-6 py-4 text-center text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border)] rounded-xl transition hover:bg-[var(--bg-hover)]">
+                <i class="fas fa-times mr-1.5"></i> Cancel
+            </a>
+            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto ml-auto">
+                <button type="submit" name="save_draft"
+                        class="w-full sm:w-auto px-6 py-4 bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium rounded-xl transition hover:bg-[var(--bg-hover)]">
+                    <i class="fas fa-pen mr-1.5"></i> Save as Draft
+                </button>
+                <button type="submit" name="save_workout"
+                        class="w-full sm:w-auto px-6 py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-xl transition shadow-lg shadow-indigo-500/20">
+                    <i class="fas fa-check mr-1.5"></i> Save Workout
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    document.querySelectorAll('.exercise-entry input[type="number"]').forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value && parseFloat(this.value) < 0) {
+                this.value = 0;
+            }
+        });
+    });
+</script>
+{% endblock %}

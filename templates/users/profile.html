@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - Fitness Tracker{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-lg">
+            <i class="fas fa-user"></i>
+        </div>
+        <div>
+            <h1 class="text-xl font-bold text-[var(--text-primary)]">Profile</h1>
+            <p class="text-sm text-[var(--text-secondary)]">Update your personal information</p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        <!-- User Info -->
+        <div class="card">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-sm">👤</span>
+                <h3 class="text-sm font-semibold text-[var(--text-primary)] uppercase tracking-wider">Account Information</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Username <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" name="username" id="id_username" value="{{ form.username.value|default:'' }}" 
+                           class="w-full px-5 py-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition">
+                </div>
+                <div>
+                    <label for="id_email" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Email <span class="text-red-400">*</span>
+                    </label>
+                    <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" 
+                           class="w-full px-5 py-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="card">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-sm">📊</span>
+                <h3 class="text-sm font-semibold text-[var(--text-primary)] uppercase tracking-wider">Body Metrics</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="id_weight_unit" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Weight Unit
+                    </label>
+                    <select name="weight_unit" id="id_weight_unit" 
+                            class="w-full px-5 py-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition">
+                        <option value="kg" {% if profile_form.weight_unit.value == 'kg' %}selected{% endif %}>kg</option>
+                        <option value="lbs" {% if profile_form.weight_unit.value == 'lbs' %}selected{% endif %}>lbs</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="id_current_weight" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Current Weight ({{ profile_form.instance.weight_unit|default:"kg" }})
+                    </label>
+                    <input type="number" name="current_weight" id="id_current_weight" 
+                           value="{{ profile_form.current_weight.value|default:'' }}" step="0.1"
+                           class="w-full px-5 py-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                           placeholder="e.g. 75.0">
+                </div>
+                <div>
+                    <label for="id_goal_weight" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Goal Weight ({{ profile_form.instance.weight_unit|default:"kg" }})
+                    </label>
+                    <input type="number" name="goal_weight" id="id_goal_weight" 
+                           value="{{ profile_form.goal_weight.value|default:'' }}" step="0.1"
+                           class="w-full px-5 py-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                           placeholder="e.g. 72.0">
+                </div>
+                <div>
+                    <label for="id_height" class="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">
+                        Height (cm)
+                    </label>
+                    <input type="number" name="height" id="id_height" 
+                           value="{{ profile_form.height.value|default:'' }}" step="0.1"
+                           class="w-full px-5 py-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+                           placeholder="e.g. 180.0">
+                </div>
+
+                <!-- Tracked PR Exercises -->
+                <div>
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+                        Tracked PR Exercises
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 p-4 bg-[var(--bg-input)] border border-[var(--border)] rounded-xl">
+                        {% for exercise in exercises %}
+                            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--bg-hover)] transition cursor-pointer">
+                                <input type="checkbox" name="tracked_pr_exercises" value="{{ exercise.name }}"
+                                       class="w-4 h-4 text-indigo-500 rounded border-[var(--border)] focus:ring-indigo-500/50"
+                                       {% if exercise.name in profile_form.tracked_pr_exercises.value %}checked{% endif %}>
+                                <span class="text-sm text-[var(--text-secondary)]">{{ exercise.name }}</span>
+                            </label>
+                        {% empty %}
+                            <p class="text-sm text-[var(--text-muted)] col-span-full">No exercises available. Add some in the admin panel.</p>
+                        {% endfor %}
+                    </div>
+                    <p class="text-xs text-[var(--text-muted)] mt-1.5">Select the exercises you want to track for personal records</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <a href="{% url 'home' %}" class="w-full sm:w-auto px-6 py-4 text-center text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border)] rounded-xl transition hover:bg-[var(--bg-hover)]">
+                <i class="fas fa-times mr-1.5"></i> Cancel
+            </a>
+            <button type="submit" class="w-full sm:w-auto px-6 py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-xl transition shadow-lg shadow-indigo-500/20 ml-auto">
+                <i class="fas fa-save mr-1.5"></i> Save Changes
+            </button>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
