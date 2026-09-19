@@ -1,270 +1,171 @@
-# Fitness Progress Tracker 💪
+# Fitness Progress Tracker
 
-[![Django Version](https://img.shields.io/badge/Django-4.2-green.svg)](https://www.djangoproject.com/)
-[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-4.2-green.svg)](https://www.djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8.svg)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> **Track, Progress, and Dominate Your Fitness Journey** – A fully featured Django web application to log workouts, monitor personal records, and visualize your gym progress.
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Active-success.svg" alt="Active">
-  <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" alt="Version">
-  <img src="https://img.shields.io/badge/Built%20For-Gym%20Enthusiasts-orange.svg" alt="Built For">
-</p>
-
----
-
-## 📹 Demo / Walkthrough
+A Django web app for logging gym workouts, saving drafts to finish later, and tracking personal records. When you complete a workout, the app detects new PRs automatically, and a dashboard shows your monthly stats, latest workouts, and PRs.
 
 <p align="center">
-  <img src="demo.gif" alt="Fitness Progress Tracker Demo" width="800">
+  <img src="demo.gif" alt="Fitness Progress Tracker demo" width="800">
 </p>
 
-> *A quick walkthrough showing how to log a workout, save it as a draft, and track personal records.*
+*A quick walkthrough: logging a workout, saving it as a draft, and tracking personal records.*
 
 ---
 
-## 📋 Table of Contents
+## Features
 
-- [🌟 What is Fitness Progress Tracker?](#-what-is-fitness-progress-tracker)
-- [✨ Key Features](#-key-features)
-- [📹 Demo / Walkthrough](#-demo--walkthrough)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [🚀 Getting Started](#-getting-started)
-- [📚 What I Learned](#-what-i-learned)
-- [🚀 Future Improvements](#-future-improvements)
-- [🤝 Connect With Me](#-connect-with-me)
-- [🙏 Acknowledgments](#-acknowledgments)
-- [📄 License](#-license)
+**Workouts**
+- Log workouts with multiple exercises, each with sets, reps, and weight
+- Save a workout as a draft, which is handy for logging between sets at the gym, and complete it later
+- View and manage your workout history
 
----
+**Personal Records**
+- PRs are detected automatically when a workout is completed
+- Choose which exercises you want to track
+- See your PRs on the dashboard
 
-## 🌟 What is Fitness Progress Tracker?
+**Dashboard and UI**
+- Monthly stats, latest workouts, and PRs in one place
+- Dark/light theme toggle
+- Responsive layout for desktop, tablet, and phone
+- Search, filter, and sidebar built with vanilla JavaScript
 
-**Fitness Progress Tracker** is a production-ready Django application designed for gym-goers who want to:
-- 📊 **Log workouts** with precision (sets, reps, weight)
-- 🏆 **Track Personal Records** automatically
-- 📈 **Monitor progress** through an intuitive dashboard
-- 💾 **Save drafts** and complete workouts later
-
-Whether you're a beginner tracking your first workout or an advanced lifter chasing PRs, this app keeps everything organized in one place.
+**Accounts**
+- Register, log in, and reset your password
+- Update your weight, height, and preferences in your profile
+- Each user only sees their own workouts and PRs
 
 ---
 
-## ✨ Key Features
+## Tech Stack
 
-### 🏋️ Workout Management
-- **Log workouts** with multiple exercises, sets, reps, and weight
-- **Save as draft** – perfect for logging between sets at the gym
-- **Complete workouts** with automatic PR detection
-- **Workout history** – view and manage all completed workouts
+**Backend:** Django 4.2, SQLite (development), PostgreSQL (optional), Django signals for PR detection
 
-### 🏆 Personal Records (PRs)
-- **Auto-detect** when you hit a new PR
-- **Tracked exercises** – choose which exercises to monitor
-- **Progress visualization** – see your PRs at a glance
+**Frontend:** Django templates, Tailwind CSS, Font Awesome, vanilla JavaScript
 
-### 🎨 Dashboard & UX
-- **Clean dashboard** with monthly stats, latest workouts, and PRs
-- **Dark/Light theme toggle** – comfortable viewing in any environment
-- **Mobile responsive** – works on desktop, tablet, and phone
-- **Interactive UI** – JavaScript powered search, filter, and sidebar
-
-### 🔐 User Features
-- **Secure authentication** – login, register, password reset
-- **Profile management** – update weight, height, and preferences
-- **User-specific data** – every user sees only their own workouts and PRs
-- **Session persistence** – seamless experience across pages
+**Tools:** Git, pip, Black, Django admin
 
 ---
 
-## 🛠️ Tech Stack
-
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| **Django 4.2** | Web framework (MTV architecture) |
-| **SQLite** | Development database |
-| **PostgreSQL** | Production-ready (optional) |
-| **Django Signals** | Auto-detect PRs on save |
-
-### Frontend
-| Technology | Purpose |
-|------------|---------|
-| **Tailwind CSS** | Utility-first styling |
-| **Font Awesome** | Icons |
-| **Vanilla JavaScript** | Theme toggle, sidebar, search/filter |
-| **Django Templates** | Server-side HTML rendering |
-
-### Tools & Practices
-| Tool | Purpose |
-|------|---------|
-| **Git** | Version control |
-| **pip** | Dependency management |
-| **Black** | Code formatting |
-| **Django Admin** | Built-in admin panel |
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- **Python 3.10+** – [Download Python](https://www.python.org/downloads/)
-- **pip** – Python package manager
-- **Git** – Version control
-- **Virtual Environment** – Recommended for isolation
+- Python 3.10+
+- pip
+- Git
 
 ### Installation
 
-#### 1. Clone the repository
+**1. Clone the repository**
 ```bash
-git clone https://github.com/FeiDuanFish/Fitness-Progress-Tracker.git
+git clone https://github.com/SalmonFlight/Fitness-Progress-Tracker.git
 cd Fitness-Progress-Tracker
 ```
-#### 2. Create and activate a virtual environment
+
+**2. Create and activate a virtual environment**
 ```bash
 python -m venv venv
 source venv/bin/activate      # Mac/Linux
-# OR
 venv\Scripts\activate         # Windows
 ```
-#### 3. Install dependencies
+
+**3. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
-#### 4. Set up environment variables
-```bash
-#Copy the example file:
-cp .env.example .env
 
-#Open the .env file and change these values:
+**4. Set up environment variables**
+
+Copy the example file:
+```bash
+cp .env.example .env
+```
+
+Then open `.env` and change these values:
+```
 SECRET_KEY=your-secret-key-here
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password
-
-#To get a SECRET_KEY, open Python and run:
-from django.core.management.utils import get_random_secret_key
-print(get_random_secret_key())
-
-#For email, use a Gmail App Password (not your regular password). Get it at myaccount.google.com/apppasswords
 ```
-#### 5. Run database migrations
+
+To generate a `SECRET_KEY`:
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+For the email password, use a Gmail App Password, not your regular password. You can create one at [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords).
+
+**5. Run database migrations**
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
-#### 6. Create and admin account
+
+**6. Create an admin account**
 ```bash
 python manage.py createsuperuser
-#Follow the prompts to create your admin username and password.
 ```
-#### 7. Run the server
+Follow the prompts to set a username and password.
+
+**7. Run the server**
 ```bash
 python manage.py runserver
 ```
-#### 8. Open in Browser
-```bash
-http://127.0.0.1:8000/register/
-```
 
-## 📚 What I Learned
+**8. Open the app**
 
-Building this project taught me a lot about full-stack development with Django. Here are the key takeaways:
+Go to http://127.0.0.1:8000/register/ in your browser.
 
 ---
 
-### 🧠 Core Web Development Concepts
+## What I Learned
 
-| Concept | What I Learned |
-|---------|----------------|
-| **Authentication & Authorization** | Built a complete auth system with login, registration, password reset, and session management. |
-| **CRUD Operations** | Implemented Create, Read, Update, Delete for workouts, exercises, and personal records. |
-| **User-Specific Data** | Ensured users only see and interact with their own data using `get_queryset()` and `LoginRequiredMixin`. |
-| **Session Management** | Used Django sessions to persist data across pages (e.g., selected exercises, draft snapshots). |
-| **Draft System** | Learned how to implement a draft/completed status system that allows users to save progress and return later. |
+- **Auth and user-specific data:** Built login, registration, password reset, and session handling. Used `LoginRequiredMixin` and `get_queryset()` so users only ever see their own data.
+- **Class-based views:** Used `ListView`, `DetailView`, `CreateView`, `UpdateView`, and `DeleteView` for the CRUD on workouts, exercises, and PRs.
+- **Signals:** Used `post_save` signals to detect personal records when a workout is completed.
+- **Sessions:** Used Django sessions to keep data across pages, like selected exercises and draft snapshots.
+- **Forms and templates:** `ModelForm` and custom forms for registration, profiles, and workout logging, plus template inheritance with `base.html` to keep templates DRY.
+- **Frontend:** Styled the app with Tailwind utility classes, built the theme toggle with CSS variables and JavaScript, and made the layout responsive.
+- **Debugging and setup:** Tracked down bugs like `InvalidOperation` errors, session conflicts, and form validation issues. Kept secrets in `.env` files and dependencies in virtual environments.
 
----
+### Biggest Challenge
 
-### ⚙️ Django-Specific Skills
+The draft system. Users needed to add exercises to a draft, cancel their changes, and get back to the original state without losing data.
 
-| Skill | What I Built |
-|-------|--------------|
-| **Class-Based Views** | Used `ListView`, `DetailView`, `CreateView`, `UpdateView`, `DeleteView` for clean, reusable views. |
-| **Signals** | Implemented `post_save` signals to auto-detect Personal Records when a workout is completed. |
-| **Forms** | Worked with `ModelForm` and custom forms for user registration, profile updates, and workout logging. |
-| **Template Inheritance** | Used `base.html` with `{% extends %}` and `{% block %}` to keep templates DRY. |
-| **URL Routing** | Structured URLs with namespaces and parameters for cleaner routing. |
-| **Migrations** | Managed database schema changes with `makemigrations` and `migrate`. |
+I solved it with Django sessions and a snapshot mechanism: the original state of the draft is saved before any changes are made. Cancel restores from the snapshot, and save commits the changes.
+
+### Takeaway
+
+Plan before you code. For the more complex features (drafts, sessions, PR detection), a clear plan saved me hours of debugging and made the code easier to maintain.
 
 ---
 
-### 🎨 Frontend & UX Skills
+## Future Improvements
 
-| Skill | What I Learned |
-|-------|----------------|
-| **Tailwind CSS** | Styled the entire app with utility classes without writing custom CSS. |
-| **Dark/Light Theme** | Implemented a theme toggle using CSS variables and JavaScript. |
-| **Responsive Design** | Made the app work on desktop, tablet, and mobile using Tailwind's responsive classes. |
-| **Vanilla JavaScript** | Added interactivity like sidebar toggle, search/filter, and theme switching. |
-| **User Experience** | Designed intuitive flows — draft system, dashboard stats, and PR tracking. |
+- Progress charts for strength and weight over time
+- Workout templates to save and reuse routines
+- Quick log: log a workout in under 30 seconds with pre-filled defaults
+- Workout calendar showing frequency and streaks
+- Export workout history as CSV or PDF
+- Achievements and streaks
+- Django REST API
+- Mobile app with React Native or Flutter
 
----
-
-### 🛠️ Developer & Git Skills
-
-| Skill | What I Practiced |
-|-------|-------------------|
-| **Git & GitHub** | Used version control for every feature, wrote clear commit messages, and maintained a clean repository. |
-| **Debugging** | Fixed issues like `InvalidOperation`, session conflicts, and form validation errors. |
-| **Environment Variables** | Managed sensitive data like `SECRET_KEY` with `.env` files. |
-| **Virtual Environments** | Kept project dependencies isolated and reproducible. |
+Contributions are welcome. Feel free to open an issue or submit a pull request.
 
 ---
 
-### 🔥 Biggest Challenge & Solution
+## Contact
 
-**The Challenge:**  
-Managing the draft system — allowing users to add exercises to a draft, cancel changes, and revert to the original state without losing data.
-
-**The Solution:**  
-Used Django sessions with a snapshot mechanism that saves the original state of a draft before any changes. Cancel restores from the snapshot, while save commits the changes.
-
----
-
-### 💡 Key Takeaway
-
-**"Plan before you code."**  
-This project taught me that a clear plan — especially for complex features like drafts, sessions, and PR detection — saves hours of debugging and makes the codebase easier to maintain.
-
----
-
-## 🚀 Future Improvements
-
-Here are some features I'd like to add in the future:
-
-- **Progress Charts** – Visualize strength and weight progress over time.
-- **Workout Templates** – Save and reuse workout routines.
-- **Quick Log** – Log workouts in under 30 seconds with pre-filled defaults.
-- **Workout Calendar** – Visual calendar view showing workout frequency and streaks.
-- **Export Data** – Export workout history as CSV or PDF.
-- **Achievements & Streaks** – Gamification to stay motivated.
-- **Django REST API** – Build an API for future mobile app integration.
-- **Mobile App** – Native iOS/Android app using React Native or Flutter.
-- **PostgreSQL Support** – Production-ready database with better performance.
-
-> **Contributions are welcome!** Feel free to open an issue or submit a pull request.
-
-## Connect With Me
-
-I'm actively seeking SWE roles!
+I'm actively looking for SWE roles.
 
 - GitHub: [github.com/SalmonFlight](https://github.com/SalmonFlight)
-- LinkedIn: To be added
-- Email: B.Aaron.Santoso@gmail.com
+- Email: B.AaronSantoso@gmail.com
 
 ---
 
@@ -273,17 +174,9 @@ I'm actively seeking SWE roles!
 - Django Documentation
 - Corey Schafer's Django Tutorial
 - Tailwind 3
-  
+
 ---
 
 ## License
 
 This project is open source under the MIT License.
-
-
-
-
-
-
-
-
