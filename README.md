@@ -262,7 +262,7 @@ Here are some features I'd like to add in the future:
 
 I'm actively seeking SWE roles!
 
-- GitHub: [github.com/FeiDuanFish](https://github.com/FeiDuanFish)
+- GitHub: [github.com/SalmonFlight](https://github.com/SalmonFlight)
 - LinkedIn: To be added
 - Email: B.Aaron.Santoso@gmail.com
 
