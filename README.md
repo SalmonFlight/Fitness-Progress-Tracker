@@ -165,6 +165,7 @@ Contributions are welcome. Feel free to open an issue or submit a pull request.
 I'm actively looking for SWE roles.
 
 - GitHub: [github.com/SalmonFlight](https://github.com/SalmonFlight)
+- LinkedIn: https://www.linkedin.com/in/brayden-aaron-santoso-351010434/
 - Email: B.AaronSantoso@gmail.com
 
 ---
@@ -172,7 +173,6 @@ I'm actively looking for SWE roles.
 ## Acknowledgments
 
 - Django Documentation
-- Corey Schafer's Django Tutorial
 - Tailwind 3
 
 ---
