@@ -23,7 +23,7 @@
 ## Demo
 
 <p align="center">
-  <img src="demo.gif" alt="Fitness Progress Tracker demo" width="800">
+  <img width="1902" height="1033" alt="FitnessTracker" src="https://github.com/user-attachments/assets/41392be7-6ce6-4be3-b229-ba4de4ebcfbc" />
 </p>
 
 <p align="center">
